@@ -280,4 +280,4 @@ Distribuído sob a licença MIT. Veja [LICENSE](LICENSE) para mais informações
 
 ## Autor
 
-Feito por **[Seu Nome](https://github.com/fabiojmj)** · [LinkedIn](https://linkedin.com/in/fabio-mendonca-jr)
+Feito por **[Fábio Mendonça](https://github.com/fabiojmj)** · [LinkedIn](https://linkedin.com/in/fabio-mendonca-jr)
