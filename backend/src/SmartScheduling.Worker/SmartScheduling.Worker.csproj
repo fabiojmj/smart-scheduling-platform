@@ -1,0 +1,21 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-SmartScheduling.Worker-8d22dd96-15d4-48e3-bfd7-3c67172f9421</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Hangfire.AspNetCore" Version="1.8.9" />
+    <PackageReference Include="Hangfire.PostgreSql" Version="1.20.9" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="8.0.0" />
+    <PackageReference Include="Serilog.Extensions.Hosting" Version="8.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\SmartScheduling.Application\SmartScheduling.Application.csproj" />
+    <ProjectReference Include="..\SmartScheduling.Infrastructure\SmartScheduling.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>

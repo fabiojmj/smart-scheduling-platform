@@ -1,0 +1,42 @@
+version: '3.9'
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: smart_scheduling_db
+    environment:
+      POSTGRES_DB: smart_scheduling
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+  seq:
+    image: datalust/seq:latest
+    container_name: smart_scheduling_seq
+    environment:
+      ACCEPT_EULA: "Y"
+    ports:
+      - "5341:80"
+    volumes:
+      - seq_data:/data
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: smart_scheduling_mq
+    environment:
+      RABBITMQ_DEFAULT_USER: admin
+      RABBITMQ_DEFAULT_PASS: admin
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+volumes:
+  postgres_data:
+  seq_data:
+  rabbitmq_data:
