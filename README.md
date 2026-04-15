@@ -2,8 +2,8 @@
 
 > Plataforma SaaS de agendamento inteligente via WhatsApp com IA — atende clientes por texto e áudio, agenda automaticamente e oferece painel completo para estabelecimentos e funcionários.
 
-[![Build](https://github.com/seu-usuario/smart-scheduling-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/seu-usuario/smart-scheduling-platform/actions)
-[![Coverage](https://img.shields.io/badge/coverage-80%25-brightgreen)](https://github.com/seu-usuario/smart-scheduling-platform)
+[![Build](https://github.com/fabiojmj/smart-scheduling-platform/actions/workflows/ci.yml/badge.svg)](https://github.com/fabiojmj/smart-scheduling-platform/actions)
+[![Coverage](https://img.shields.io/badge/coverage-80%25-brightgreen)](https://github.com/fabiojmj/smart-scheduling-platform)
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![.NET](https://img.shields.io/badge/.NET-8.0-512BD4)](https://dotnet.microsoft.com)
 [![React](https://img.shields.io/badge/React-18-61DAFB)](https://react.dev)
@@ -128,7 +128,7 @@ Estabelecimento  1──N  Funcionario  N──N  Servico
 ### 1. Clonar o repositório
 
 ```bash
-git clone https://github.com/seu-usuario/smart-scheduling-platform.git
+git clone https://github.com/fabiojmj/smart-scheduling-platform.git
 cd smart-scheduling-platform
 ```
 
