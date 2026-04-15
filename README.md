@@ -262,7 +262,7 @@ Veja [CONTRIBUTING.md](CONTRIBUTING.md) para o guia completo.
 
 ## Roadmap
 
-Acompanhe o progresso no [GitHub Projects](https://github.com/seu-usuario/smart-scheduling-platform/projects/1).
+Acompanhe o progresso no [GitHub Projects](https://github.com/fabiojmj/smart-scheduling-platform/projects/1).
 
 - [x] Fase 1 — Fundação e arquitetura
 - [ ] Fase 2 — Core API e domínio
@@ -280,4 +280,4 @@ Distribuído sob a licença MIT. Veja [LICENSE](LICENSE) para mais informações
 
 ## Autor
 
-Feito por **[Seu Nome](https://github.com/seu-usuario)** · [LinkedIn](https://linkedin.com/in/seu-perfil)
+Feito por **[Seu Nome](https://github.com/fabiojmj)** · [LinkedIn](https://linkedin.com/in/fabio-mendonca-jr)
