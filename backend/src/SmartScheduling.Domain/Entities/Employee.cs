@@ -3,45 +3,46 @@ using SmartScheduling.Domain.ValueObjects;
 
 namespace SmartScheduling.Domain.Entities;
 
-public class Employee : Entity
+public class Funcionario : Entity
 {
-    public string Name { get; private set; }
+    public string Nome { get; private set; }
     public string Email { get; private set; }
-    public Guid EstablishmentId { get; private set; }
-    public bool IsActive { get; private set; }
+    public Guid EstabelecimentoId { get; private set; }
+    public bool Ativo { get; private set; }
 
-    private readonly List<WorkingHours> _workingHours = [];
-    private readonly List<Service> _services = [];
-    private readonly List<Appointment> _appointments = [];
+    private readonly List<WorkingHours> _horarios = [];
+    private readonly List<Servico> _servicos = [];
+    private readonly List<Agendamento> _agendamentos = [];
 
-    public IReadOnlyCollection<WorkingHours> WorkingHours => _workingHours.AsReadOnly();
-    public IReadOnlyCollection<Service> Services => _services.AsReadOnly();
-    public IReadOnlyCollection<Appointment> Appointments => _appointments.AsReadOnly();
+    public IReadOnlyCollection<WorkingHours> Horarios => _horarios.AsReadOnly();
+    public IReadOnlyCollection<Servico> Servicos => _servicos.AsReadOnly();
+    public IReadOnlyCollection<Agendamento> Agendamentos => _agendamentos.AsReadOnly();
 
-    private Employee() { Name = default!; Email = default!; }
+    private Funcionario() { Nome = default!; Email = default!; }
 
-    public static Employee Create(string name, string email, Guid establishmentId)
+    public static Funcionario Criar(string nome, string email, Guid estabelecimentoId)
     {
-        if (string.IsNullOrWhiteSpace(name)) throw new DomainException("Nome do funcionario e obrigatorio.");
-        return new Employee { Name = name.Trim(), Email = email.Trim().ToLower(), EstablishmentId = establishmentId, IsActive = true };
+        if (string.IsNullOrWhiteSpace(nome)) throw new DomainException("Nome do funcionario e obrigatorio.");
+        return new Funcionario { Nome = nome.Trim(), Email = email.Trim().ToLower(), EstabelecimentoId = estabelecimentoId, Ativo = true };
     }
 
-    public void AddWorkingHours(WorkingHours wh)
+    public void AdicionarHorario(WorkingHours horario)
     {
-        if (_workingHours.Any(w => w.DayOfWeek == wh.DayOfWeek)) throw new DomainException($"Horario para {wh.DayOfWeek} ja configurado.");
-        _workingHours.Add(wh);
+        if (_horarios.Any(h => h.DayOfWeek == horario.DayOfWeek))
+            throw new DomainException($"Horario para {horario.DayOfWeek} ja configurado.");
+        _horarios.Add(horario);
     }
 
-    public void AssignService(Service service)
+    public void AtribuirServico(Servico servico)
     {
-        if (_services.Any(s => s.Id == service.Id)) throw new DomainException($"Servico ja atribuido.");
-        _services.Add(service);
+        if (_servicos.Any(s => s.Id == servico.Id)) throw new DomainException("Servico ja atribuido.");
+        _servicos.Add(servico);
     }
 
-    public bool IsAvailableAt(TimeSlot slot) =>
-        _workingHours.Any(w => w.IsAvailableOn(slot.Start))
-        && !_appointments.Any(a => a.IsActive() && a.TimeSlot.OverlapsWith(slot));
+    public bool EstaDisponivel(TimeSlot horario) =>
+        _horarios.Any(h => h.IsAvailableOn(horario.Start))
+        && !_agendamentos.Any(a => a.EstaAtivo() && a.Horario.OverlapsWith(horario));
 
-    public bool CanPerform(Service service) => _services.Any(s => s.Id == service.Id);
-    public void Deactivate() { IsActive = false; MarkAsUpdated(); }
+    public bool PodeExecutar(Servico servico) => _servicos.Any(s => s.Id == servico.Id);
+    public void Desativar() { Ativo = false; MarkAsUpdated(); }
 }

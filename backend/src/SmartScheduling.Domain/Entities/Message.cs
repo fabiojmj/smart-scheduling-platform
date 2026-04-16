@@ -2,16 +2,16 @@ using SmartScheduling.Domain.Enums;
 
 namespace SmartScheduling.Domain.Entities;
 
-public class Message : Entity
+public class Mensagem : Entity
 {
-    public Guid ConversationId { get; private set; }
-    public string Content { get; private set; }
-    public MessageType Type { get; private set; }
-    public bool IsFromClient { get; private set; }
-    public string? TranscriptionText { get; private set; }
+    public Guid ConversaId { get; private set; }
+    public string Conteudo { get; private set; }
+    public TipoMensagem Tipo { get; private set; }
+    public bool VeioDoCliente { get; private set; }
+    public string? TextoTranscrito { get; private set; }
 
-    private Message() { Content = default!; }
+    private Mensagem() { Conteudo = default!; }
 
-    public static Message Create(Guid conversationId, string content, MessageType type, bool isFromClient, string? transcription = null) =>
-        new() { ConversationId = conversationId, Content = content, Type = type, IsFromClient = isFromClient, TranscriptionText = transcription };
+    public static Mensagem Criar(Guid conversaId, string conteudo, TipoMensagem tipo, bool veioDoCliente, string? transcricao = null) =>
+        new() { ConversaId = conversaId, Conteudo = conteudo, Tipo = tipo, VeioDoCliente = veioDoCliente, TextoTranscrito = transcricao };
 }

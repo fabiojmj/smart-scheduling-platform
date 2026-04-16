@@ -1,9 +1,9 @@
 namespace SmartScheduling.Domain.Enums;
 
-public enum ConversationStatus
+public enum StatusConversa
 {
-    Active = 1,
-    WaitingForConfirmation = 2,
-    Completed = 3,
-    Abandoned = 4
+    Ativa = 1,
+    AguardandoConfirmacao = 2,
+    Concluida = 3,
+    Abandonada = 4
 }

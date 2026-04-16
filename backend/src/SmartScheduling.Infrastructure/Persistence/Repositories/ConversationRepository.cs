@@ -5,12 +5,14 @@ using SmartScheduling.Domain.Interfaces;
 
 namespace SmartScheduling.Infrastructure.Persistence.Repositories;
 
-public class ConversationRepository(AppDbContext context) : Repository<Conversation>(context), IConversationRepository
+public class ConversaRepository(AppDbContext context) : Repository<Conversa>(context), IConversaRepository
 {
-    public async Task<Conversation?> GetActiveByPhoneAsync(string phoneNumber, Guid establishmentId, CancellationToken cancellationToken = default) =>
-        await Context.Conversations.Include(c => c.Messages)
+    public async Task<Conversa?> ObterAtivaPorTelefoneAsync(string telefone, Guid estabelecimentoId, CancellationToken cancellationToken = default) =>
+        await Context.Conversas
+            .Include(c => c.Mensagens)
             .FirstOrDefaultAsync(c =>
-                c.ClientPhone.Value == phoneNumber && c.EstablishmentId == establishmentId
-                && (c.Status == ConversationStatus.Active || c.Status == ConversationStatus.WaitingForConfirmation),
+                c.TelefoneCliente.Value == telefone
+                && c.EstabelecimentoId == estabelecimentoId
+                && (c.Status == StatusConversa.Ativa || c.Status == StatusConversa.AguardandoConfirmacao),
                 cancellationToken);
 }

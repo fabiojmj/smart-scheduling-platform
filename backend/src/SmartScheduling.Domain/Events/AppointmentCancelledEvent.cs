@@ -1,8 +1,8 @@
 namespace SmartScheduling.Domain.Events;
 
-public sealed record AppointmentCancelledEvent(
-    Guid AppointmentId,
-    Guid ClientId,
-    string Reason,
-    DateTime CancelledAt
+public sealed record AgendamentoCanceladoEvent(
+    Guid AgendamentoId,
+    Guid ClienteId,
+    string Motivo,
+    DateTime CanceladoEm
 );

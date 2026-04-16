@@ -1,8 +1,8 @@
 namespace SmartScheduling.Domain.Enums;
 
-public enum MessageType
+public enum TipoMensagem
 {
-    Text = 1,
+    Texto = 1,
     Audio = 2,
-    Image = 3
+    Imagem = 3
 }

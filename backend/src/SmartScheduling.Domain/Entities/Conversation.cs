@@ -3,25 +3,25 @@ using SmartScheduling.Domain.ValueObjects;
 
 namespace SmartScheduling.Domain.Entities;
 
-public class Conversation : Entity
+public class Conversa : Entity
 {
-    public PhoneNumber ClientPhone { get; private set; }
-    public Guid EstablishmentId { get; private set; }
-    public ConversationStatus Status { get; private set; }
-    public Guid? PendingAppointmentId { get; private set; }
+    public PhoneNumber TelefoneCliente { get; private set; }
+    public Guid EstabelecimentoId { get; private set; }
+    public StatusConversa Status { get; private set; }
+    public Guid? AgendamentoPendenteId { get; private set; }
 
-    private readonly List<Message> _messages = [];
-    public IReadOnlyCollection<Message> Messages => _messages.AsReadOnly();
+    private readonly List<Mensagem> _mensagens = [];
+    public IReadOnlyCollection<Mensagem> Mensagens => _mensagens.AsReadOnly();
 
-    private Conversation() { ClientPhone = default!; }
+    private Conversa() { TelefoneCliente = default!; }
 
-    public static Conversation Start(string clientPhone, Guid establishmentId) =>
-        new() { ClientPhone = PhoneNumber.Create(clientPhone), EstablishmentId = establishmentId, Status = ConversationStatus.Active };
+    public static Conversa Iniciar(string telefoneCliente, Guid estabelecimentoId) =>
+        new() { TelefoneCliente = PhoneNumber.Create(telefoneCliente), EstabelecimentoId = estabelecimentoId, Status = StatusConversa.Ativa };
 
-    public void AddMessage(string content, MessageType type, bool isFromClient) =>
-        _messages.Add(Message.Create(Id, content, type, isFromClient));
+    public void AdicionarMensagem(string conteudo, TipoMensagem tipo, bool veioDoCliente) =>
+        _mensagens.Add(Mensagem.Criar(Id, conteudo, tipo, veioDoCliente));
 
-    public void WaitForConfirmation(Guid id) { Status = ConversationStatus.WaitingForConfirmation; PendingAppointmentId = id; MarkAsUpdated(); }
-    public void Complete() { Status = ConversationStatus.Completed; MarkAsUpdated(); }
-    public void Abandon() { Status = ConversationStatus.Abandoned; MarkAsUpdated(); }
+    public void AguardarConfirmacao(Guid id) { Status = StatusConversa.AguardandoConfirmacao; AgendamentoPendenteId = id; MarkAsUpdated(); }
+    public void Concluir() { Status = StatusConversa.Concluida; MarkAsUpdated(); }
+    public void Abandonar() { Status = StatusConversa.Abandonada; MarkAsUpdated(); }
 }

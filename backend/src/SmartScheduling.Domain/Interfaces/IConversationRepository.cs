@@ -2,7 +2,7 @@ using SmartScheduling.Domain.Entities;
 
 namespace SmartScheduling.Domain.Interfaces;
 
-public interface IConversationRepository : IRepository<Conversation>
+public interface IConversaRepository : IRepository<Conversa>
 {
-    Task<Conversation?> GetActiveByPhoneAsync(string phoneNumber, Guid establishmentId, CancellationToken cancellationToken = default);
+    Task<Conversa?> ObterAtivaPorTelefoneAsync(string telefone, Guid estabelecimentoId, CancellationToken cancellationToken = default);
 }

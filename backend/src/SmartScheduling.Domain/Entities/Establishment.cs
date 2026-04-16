@@ -2,39 +2,44 @@ using SmartScheduling.Domain.Exceptions;
 
 namespace SmartScheduling.Domain.Entities;
 
-public class Establishment : Entity
+public class Estabelecimento : Entity
 {
-    public string Name { get; private set; }
+    public string Nome { get; private set; }
     public string WhatsAppPhoneNumberId { get; private set; }
-    public string OwnerId { get; private set; }
-    public bool IsActive { get; private set; }
+    public string ProprietarioId { get; private set; }
+    public bool Ativo { get; private set; }
 
-    private readonly List<Employee> _employees = [];
-    private readonly List<Service> _services = [];
-    public IReadOnlyCollection<Employee> Employees => _employees.AsReadOnly();
-    public IReadOnlyCollection<Service> Services => _services.AsReadOnly();
+    private readonly List<Funcionario> _funcionarios = [];
+    private readonly List<Servico> _servicos = [];
+    public IReadOnlyCollection<Funcionario> Funcionarios => _funcionarios.AsReadOnly();
+    public IReadOnlyCollection<Servico> Servicos => _servicos.AsReadOnly();
 
-    private Establishment() { Name = default!; WhatsAppPhoneNumberId = default!; OwnerId = default!; }
+    private Estabelecimento() { Nome = default!; WhatsAppPhoneNumberId = default!; ProprietarioId = default!; }
 
-    public static Establishment Create(string name, string whatsAppPhoneNumberId, string ownerId)
+    public static Estabelecimento Criar(string nome, string whatsAppPhoneNumberId, string proprietarioId)
     {
-        if (string.IsNullOrWhiteSpace(name))
+        if (string.IsNullOrWhiteSpace(nome))
             throw new DomainException("Nome do estabelecimento e obrigatorio.");
-        return new Establishment { Name = name.Trim(), WhatsAppPhoneNumberId = whatsAppPhoneNumberId, OwnerId = ownerId, IsActive = true };
+        return new Estabelecimento { Nome = nome.Trim(), WhatsAppPhoneNumberId = whatsAppPhoneNumberId, ProprietarioId = proprietarioId, Ativo = true };
     }
 
-    public void UpdateName(string name) { if (string.IsNullOrWhiteSpace(name)) throw new DomainException("Nome e obrigatorio."); Name = name.Trim(); MarkAsUpdated(); }
-    public void Deactivate() { IsActive = false; MarkAsUpdated(); }
-
-    public void AddEmployee(Employee employee)
+    public void AtualizarNome(string nome)
     {
-        if (_employees.Any(e => e.Id == employee.Id)) throw new DomainException("Funcionario ja cadastrado.");
-        _employees.Add(employee);
+        if (string.IsNullOrWhiteSpace(nome)) throw new DomainException("Nome e obrigatorio.");
+        Nome = nome.Trim(); MarkAsUpdated();
     }
 
-    public void AddService(Service service)
+    public void Desativar() { Ativo = false; MarkAsUpdated(); }
+
+    public void AdicionarFuncionario(Funcionario funcionario)
     {
-        if (_services.Any(s => s.Name == service.Name)) throw new DomainException($"Servico '{service.Name}' ja existe.");
-        _services.Add(service);
+        if (_funcionarios.Any(f => f.Id == funcionario.Id)) throw new DomainException("Funcionario ja cadastrado.");
+        _funcionarios.Add(funcionario);
+    }
+
+    public void AdicionarServico(Servico servico)
+    {
+        if (_servicos.Any(s => s.Nome == servico.Nome)) throw new DomainException($"Servico '{servico.Nome}' ja existe.");
+        _servicos.Add(servico);
     }
 }

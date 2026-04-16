@@ -2,26 +2,31 @@ using SmartScheduling.Domain.Exceptions;
 
 namespace SmartScheduling.Domain.Entities;
 
-public class Service : Entity
+public class Servico : Entity
 {
-    public string Name { get; private set; }
-    public string? Description { get; private set; }
-    public int DurationMinutes { get; private set; }
-    public decimal Price { get; private set; }
-    public Guid EstablishmentId { get; private set; }
-    public bool IsActive { get; private set; }
+    public string Nome { get; private set; }
+    public string? Descricao { get; private set; }
+    public int DuracaoMinutos { get; private set; }
+    public decimal Preco { get; private set; }
+    public Guid EstabelecimentoId { get; private set; }
+    public bool Ativo { get; private set; }
 
-    private Service() { Name = default!; }
+    private Servico() { Nome = default!; }
 
-    public static Service Create(string name, int durationMinutes, decimal price, Guid establishmentId, string? description = null)
+    public static Servico Criar(string nome, int duracaoMinutos, decimal preco, Guid estabelecimentoId, string? descricao = null)
     {
-        if (string.IsNullOrWhiteSpace(name)) throw new DomainException("Nome do servico e obrigatorio.");
-        if (durationMinutes <= 0) throw new DomainException("Duracao deve ser maior que zero.");
-        if (price < 0) throw new DomainException("Preco nao pode ser negativo.");
-        return new Service { Name = name.Trim(), Description = description?.Trim(), DurationMinutes = durationMinutes, Price = price, EstablishmentId = establishmentId, IsActive = true };
+        if (string.IsNullOrWhiteSpace(nome)) throw new DomainException("Nome do servico e obrigatorio.");
+        if (duracaoMinutos <= 0) throw new DomainException("Duracao deve ser maior que zero.");
+        if (preco < 0) throw new DomainException("Preco nao pode ser negativo.");
+        return new Servico
+        {
+            Nome = nome.Trim(), Descricao = descricao?.Trim(),
+            DuracaoMinutos = duracaoMinutos, Preco = preco,
+            EstabelecimentoId = estabelecimentoId, Ativo = true
+        };
     }
 
-    public void UpdatePrice(decimal p) { if (p < 0) throw new DomainException("Preco invalido."); Price = p; MarkAsUpdated(); }
-    public void UpdateDuration(int m) { if (m <= 0) throw new DomainException("Duracao invalida."); DurationMinutes = m; MarkAsUpdated(); }
-    public void Deactivate() { IsActive = false; MarkAsUpdated(); }
+    public void AtualizarPreco(decimal preco) { if (preco < 0) throw new DomainException("Preco invalido."); Preco = preco; MarkAsUpdated(); }
+    public void AtualizarDuracao(int minutos) { if (minutos <= 0) throw new DomainException("Duracao invalida."); DuracaoMinutos = minutos; MarkAsUpdated(); }
+    public void Desativar() { Ativo = false; MarkAsUpdated(); }
 }

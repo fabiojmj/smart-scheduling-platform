@@ -4,22 +4,51 @@ using SmartScheduling.Domain.Entities;
 
 namespace SmartScheduling.Infrastructure.Persistence.Configurations;
 
-public class AppointmentConfiguration : IEntityTypeConfiguration<Appointment>
+public class AgendamentoConfiguration : IEntityTypeConfiguration<Agendamento>
 {
-    public void Configure(EntityTypeBuilder<Appointment> builder)
+    public void Configure(EntityTypeBuilder<Agendamento> builder)
     {
+        builder.ToTable("agendamentos");
+
         builder.HasKey(a => a.Id);
-        builder.OwnsOne(a => a.TimeSlot, ts =>
+        builder.Property(a => a.Id).HasColumnName("id");
+
+        builder.OwnsOne(a => a.Horario, h =>
         {
-            ts.Property(t => t.Start).HasColumnName("StartAt").IsRequired();
-            ts.Property(t => t.End).HasColumnName("EndAt").IsRequired();
+            h.Property(t => t.Start).HasColumnName("inicio_em").IsRequired();
+            h.Property(t => t.End).HasColumnName("fim_em").IsRequired();
         });
-        builder.Property(a => a.Status).IsRequired();
-        builder.Property(a => a.CancellationReason).HasMaxLength(500);
-        builder.Property(a => a.Notes).HasMaxLength(1000);
-        builder.HasOne(a => a.Client).WithMany(c => c.Appointments).HasForeignKey(a => a.ClientId).OnDelete(DeleteBehavior.Restrict);
-        builder.HasOne(a => a.Employee).WithMany(e => e.Appointments).HasForeignKey(a => a.EmployeeId).OnDelete(DeleteBehavior.Restrict);
-        builder.HasOne(a => a.Service).WithMany().HasForeignKey(a => a.ServiceId).OnDelete(DeleteBehavior.Restrict);
+
+        builder.Property(a => a.ClienteId).HasColumnName("cliente_id").IsRequired();
+        builder.Property(a => a.FuncionarioId).HasColumnName("funcionario_id").IsRequired();
+        builder.Property(a => a.ServicoId).HasColumnName("servico_id").IsRequired();
+        builder.Property(a => a.EstabelecimentoId).HasColumnName("estabelecimento_id").IsRequired();
+        builder.Property(a => a.Status).HasColumnName("status").IsRequired();
+        builder.Property(a => a.Observacoes).HasColumnName("observacoes").HasMaxLength(1000);
+        builder.Property(a => a.MotivoCancelamento).HasColumnName("motivo_cancelamento").HasMaxLength(500);
+        builder.Property(a => a.CreatedAt).HasColumnName("criado_em").IsRequired();
+        builder.Property(a => a.UpdatedAt).HasColumnName("atualizado_em");
+
+        builder.HasOne(a => a.Cliente)
+            .WithMany(c => c.Agendamentos)
+            .HasForeignKey(a => a.ClienteId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(a => a.Funcionario)
+            .WithMany(f => f.Agendamentos)
+            .HasForeignKey(a => a.FuncionarioId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasOne(a => a.Servico)
+            .WithMany()
+            .HasForeignKey(a => a.ServicoId)
+            .OnDelete(DeleteBehavior.Restrict);
+
+        builder.HasIndex(a => a.EstabelecimentoId).HasDatabaseName("ix_agendamentos_estabelecimento_id");
+        builder.HasIndex(a => a.ClienteId).HasDatabaseName("ix_agendamentos_cliente_id");
+        builder.HasIndex(a => a.FuncionarioId).HasDatabaseName("ix_agendamentos_funcionario_id");
+        builder.HasIndex(a => new { a.FuncionarioId, a.Status }).HasDatabaseName("ix_agendamentos_funcionario_status");
+
         builder.Ignore(a => a.DomainEvents);
     }
 }

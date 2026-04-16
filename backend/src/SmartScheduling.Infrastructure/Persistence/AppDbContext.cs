@@ -6,13 +6,13 @@ namespace SmartScheduling.Infrastructure.Persistence;
 
 public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options), IUnitOfWork
 {
-    public DbSet<Establishment> Establishments => Set<Establishment>();
-    public DbSet<Employee> Employees => Set<Employee>();
-    public DbSet<Service> Services => Set<Service>();
-    public DbSet<Client> Clients => Set<Client>();
-    public DbSet<Appointment> Appointments => Set<Appointment>();
-    public DbSet<Conversation> Conversations => Set<Conversation>();
-    public DbSet<Message> Messages => Set<Message>();
+    public DbSet<Estabelecimento> Estabelecimentos => Set<Estabelecimento>();
+    public DbSet<Funcionario> Funcionarios => Set<Funcionario>();
+    public DbSet<Servico> Servicos => Set<Servico>();
+    public DbSet<Cliente> Clientes => Set<Cliente>();
+    public DbSet<Agendamento> Agendamentos => Set<Agendamento>();
+    public DbSet<Conversa> Conversas => Set<Conversa>();
+    public DbSet<Mensagem> Mensagens => Set<Mensagem>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

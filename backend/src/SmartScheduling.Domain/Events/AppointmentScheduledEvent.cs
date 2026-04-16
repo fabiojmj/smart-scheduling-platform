@@ -1,9 +1,9 @@
 namespace SmartScheduling.Domain.Events;
 
-public sealed record AppointmentScheduledEvent(
-    Guid AppointmentId,
-    Guid ClientId,
-    Guid EmployeeId,
-    DateTime ScheduledAt,
-    string ServiceName
+public sealed record AgendamentoCriadoEvent(
+    Guid AgendamentoId,
+    Guid ClienteId,
+    Guid FuncionarioId,
+    DateTime AgendadoEm,
+    string NomeServico
 );

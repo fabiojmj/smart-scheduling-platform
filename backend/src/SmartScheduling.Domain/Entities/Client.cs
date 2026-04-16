@@ -3,23 +3,31 @@ using SmartScheduling.Domain.ValueObjects;
 
 namespace SmartScheduling.Domain.Entities;
 
-public class Client : Entity
+public class Cliente : Entity
 {
-    public string Name { get; private set; }
-    public PhoneNumber PhoneNumber { get; private set; }
+    public string Nome { get; private set; }
+    public PhoneNumber Telefone { get; private set; }
     public string? Email { get; private set; }
-    public Guid EstablishmentId { get; private set; }
+    public Guid EstabelecimentoId { get; private set; }
 
-    private readonly List<Appointment> _appointments = [];
-    public IReadOnlyCollection<Appointment> Appointments => _appointments.AsReadOnly();
+    private readonly List<Agendamento> _agendamentos = [];
+    public IReadOnlyCollection<Agendamento> Agendamentos => _agendamentos.AsReadOnly();
 
-    private Client() { Name = default!; PhoneNumber = default!; }
+    private Cliente() { Nome = default!; Telefone = default!; }
 
-    public static Client Create(string name, string phoneNumber, Guid establishmentId, string? email = null)
+    public static Cliente Criar(string nome, string telefone, Guid estabelecimentoId, string? email = null)
     {
-        if (string.IsNullOrWhiteSpace(name)) throw new DomainException("Nome do cliente e obrigatorio.");
-        return new Client { Name = name.Trim(), PhoneNumber = PhoneNumber.Create(phoneNumber), EstablishmentId = establishmentId, Email = email?.Trim().ToLower() };
+        if (string.IsNullOrWhiteSpace(nome)) throw new DomainException("Nome do cliente e obrigatorio.");
+        return new Cliente
+        {
+            Nome = nome.Trim(), Telefone = PhoneNumber.Create(telefone),
+            EstabelecimentoId = estabelecimentoId, Email = email?.Trim().ToLower()
+        };
     }
 
-    public void UpdateName(string name) { if (string.IsNullOrWhiteSpace(name)) throw new DomainException("Nome obrigatorio."); Name = name.Trim(); MarkAsUpdated(); }
+    public void AtualizarNome(string nome)
+    {
+        if (string.IsNullOrWhiteSpace(nome)) throw new DomainException("Nome obrigatorio.");
+        Nome = nome.Trim(); MarkAsUpdated();
+    }
 }

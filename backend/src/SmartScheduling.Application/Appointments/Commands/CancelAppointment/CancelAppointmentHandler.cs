@@ -4,15 +4,16 @@ using SmartScheduling.Domain.Interfaces;
 
 namespace SmartScheduling.Application.Appointments.Commands.CancelAppointment;
 
-public sealed class CancelAppointmentHandler(IAppointmentRepository appointmentRepo, IUnitOfWork unitOfWork)
+public sealed class CancelAppointmentHandler(IAgendamentoRepository agendamentoRepo, IUnitOfWork unitOfWork)
     : IRequestHandler<CancelAppointmentCommand>
 {
     public async Task Handle(CancelAppointmentCommand request, CancellationToken cancellationToken)
     {
-        var appointment = await appointmentRepo.GetByIdAsync(request.AppointmentId, cancellationToken)
+        var agendamento = await agendamentoRepo.GetByIdAsync(request.AppointmentId, cancellationToken)
             ?? throw new DomainException("Agendamento nao encontrado.");
-        appointment.Cancel(request.Reason);
-        appointmentRepo.Update(appointment);
+
+        agendamento.Cancelar(request.Reason);
+        agendamentoRepo.Update(agendamento);
         await unitOfWork.CommitAsync(cancellationToken);
     }
 }

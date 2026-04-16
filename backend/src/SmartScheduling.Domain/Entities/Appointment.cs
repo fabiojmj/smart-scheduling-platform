@@ -5,66 +5,66 @@ using SmartScheduling.Domain.ValueObjects;
 
 namespace SmartScheduling.Domain.Entities;
 
-public class Appointment : Entity
+public class Agendamento : Entity
 {
-    public Guid ClientId { get; private set; }
-    public Guid EmployeeId { get; private set; }
-    public Guid ServiceId { get; private set; }
-    public Guid EstablishmentId { get; private set; }
-    public TimeSlot TimeSlot { get; private set; }
-    public AppointmentStatus Status { get; private set; }
-    public string? Notes { get; private set; }
-    public string? CancellationReason { get; private set; }
+    public Guid ClienteId { get; private set; }
+    public Guid FuncionarioId { get; private set; }
+    public Guid ServicoId { get; private set; }
+    public Guid EstabelecimentoId { get; private set; }
+    public TimeSlot Horario { get; private set; }
+    public StatusAgendamento Status { get; private set; }
+    public string? Observacoes { get; private set; }
+    public string? MotivoCancelamento { get; private set; }
 
-    public Client Client { get; private set; } = default!;
-    public Employee Employee { get; private set; } = default!;
-    public Service Service { get; private set; } = default!;
+    public Cliente Cliente { get; private set; } = default!;
+    public Funcionario Funcionario { get; private set; } = default!;
+    public Servico Servico { get; private set; } = default!;
 
-    private Appointment() { TimeSlot = default!; }
+    private Agendamento() { Horario = default!; }
 
-    public static Appointment Schedule(Client client, Employee employee, Service service, TimeSlot slot, string? notes = null)
+    public static Agendamento Agendar(Cliente cliente, Funcionario funcionario, Servico servico, TimeSlot horario, string? observacoes = null)
     {
-        if (!employee.IsAvailableAt(slot))
-            throw new SchedulingConflictException(employee.Name, slot.Start, slot.End);
-        if (!employee.CanPerform(service))
-            throw new DomainException($"Funcionario nao executa este servico.");
+        if (!funcionario.EstaDisponivel(horario))
+            throw new SchedulingConflictException(funcionario.Nome, horario.Start, horario.End);
+        if (!funcionario.PodeExecutar(servico))
+            throw new DomainException("Funcionario nao executa este servico.");
 
-        var a = new Appointment
+        var a = new Agendamento
         {
-            ClientId = client.Id, EmployeeId = employee.Id, ServiceId = service.Id,
-            EstablishmentId = service.EstablishmentId, TimeSlot = slot,
-            Status = AppointmentStatus.Pending, Notes = notes
+            ClienteId = cliente.Id, FuncionarioId = funcionario.Id, ServicoId = servico.Id,
+            EstabelecimentoId = servico.EstabelecimentoId, Horario = horario,
+            Status = StatusAgendamento.Pendente, Observacoes = observacoes
         };
-        a.AddDomainEvent(new AppointmentScheduledEvent(a.Id, client.Id, employee.Id, slot.Start, service.Name));
+        a.AddDomainEvent(new AgendamentoCriadoEvent(a.Id, cliente.Id, funcionario.Id, horario.Start, servico.Nome));
         return a;
     }
 
-    public void Confirm()
+    public void Confirmar()
     {
-        if (Status != AppointmentStatus.Pending) throw new DomainException("Apenas pendentes podem ser confirmados.");
-        Status = AppointmentStatus.Confirmed; MarkAsUpdated();
+        if (Status != StatusAgendamento.Pendente) throw new DomainException("Apenas pendentes podem ser confirmados.");
+        Status = StatusAgendamento.Confirmado; MarkAsUpdated();
     }
 
-    public void Complete()
+    public void Concluir()
     {
-        if (Status != AppointmentStatus.Confirmed) throw new DomainException("Apenas confirmados podem ser concluidos.");
-        Status = AppointmentStatus.Completed; MarkAsUpdated();
+        if (Status != StatusAgendamento.Confirmado) throw new DomainException("Apenas confirmados podem ser concluidos.");
+        Status = StatusAgendamento.Concluido; MarkAsUpdated();
     }
 
-    public void Cancel(string reason)
+    public void Cancelar(string motivo)
     {
-        if (Status is AppointmentStatus.Completed or AppointmentStatus.Cancelled)
+        if (Status is StatusAgendamento.Concluido or StatusAgendamento.Cancelado)
             throw new DomainException("Agendamento ja finalizado.");
-        if (string.IsNullOrWhiteSpace(reason)) throw new DomainException("Motivo obrigatorio.");
-        Status = AppointmentStatus.Cancelled; CancellationReason = reason; MarkAsUpdated();
-        AddDomainEvent(new AppointmentCancelledEvent(Id, ClientId, reason, DateTime.UtcNow));
+        if (string.IsNullOrWhiteSpace(motivo)) throw new DomainException("Motivo obrigatorio.");
+        Status = StatusAgendamento.Cancelado; MotivoCancelamento = motivo; MarkAsUpdated();
+        AddDomainEvent(new AgendamentoCanceladoEvent(Id, ClienteId, motivo, DateTime.UtcNow));
     }
 
-    public void MarkAsNoShow()
+    public void MarcarNaoCompareceu()
     {
-        if (Status != AppointmentStatus.Confirmed) throw new DomainException("Apenas confirmados podem ser NoShow.");
-        Status = AppointmentStatus.NoShow; MarkAsUpdated();
+        if (Status != StatusAgendamento.Confirmado) throw new DomainException("Apenas confirmados podem ser marcados como nao compareceu.");
+        Status = StatusAgendamento.NaoCompareceu; MarkAsUpdated();
     }
 
-    public bool IsActive() => Status is AppointmentStatus.Pending or AppointmentStatus.Confirmed;
+    public bool EstaAtivo() => Status is StatusAgendamento.Pendente or StatusAgendamento.Confirmado;
 }

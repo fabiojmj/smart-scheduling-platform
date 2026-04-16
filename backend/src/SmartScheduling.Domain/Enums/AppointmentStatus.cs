@@ -1,10 +1,10 @@
 namespace SmartScheduling.Domain.Enums;
 
-public enum AppointmentStatus
+public enum StatusAgendamento
 {
-    Pending = 1,
-    Confirmed = 2,
-    Completed = 3,
-    Cancelled = 4,
-    NoShow = 5
+    Pendente = 1,
+    Confirmado = 2,
+    Concluido = 3,
+    Cancelado = 4,
+    NaoCompareceu = 5
 }

@@ -2,10 +2,10 @@ using SmartScheduling.Domain.Entities;
 
 namespace SmartScheduling.Domain.Interfaces;
 
-public interface IAppointmentRepository : IRepository<Appointment>
+public interface IAgendamentoRepository : IRepository<Agendamento>
 {
-    Task<IReadOnlyList<Appointment>> GetByEmployeeAsync(Guid employeeId, DateOnly date, CancellationToken cancellationToken = default);
-    Task<IReadOnlyList<Appointment>> GetByClientAsync(Guid clientId, CancellationToken cancellationToken = default);
-    Task<IReadOnlyList<Appointment>> GetByEstablishmentAsync(Guid establishmentId, DateOnly date, CancellationToken cancellationToken = default);
-    Task<IReadOnlyList<Appointment>> GetUpcomingAsync(TimeSpan within, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Agendamento>> ObterPorFuncionarioAsync(Guid funcionarioId, DateOnly data, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Agendamento>> ObterPorClienteAsync(Guid clienteId, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Agendamento>> ObterPorEstabelecimentoAsync(Guid estabelecimentoId, DateOnly data, CancellationToken cancellationToken = default);
+    Task<IReadOnlyList<Agendamento>> ObterProximosAsync(TimeSpan dentro, CancellationToken cancellationToken = default);
 }
