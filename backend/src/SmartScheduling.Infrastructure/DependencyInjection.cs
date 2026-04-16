@@ -17,6 +17,11 @@ public static class DependencyInjection
 
         services.AddScoped<IUnitOfWork>(sp => sp.GetRequiredService<AppDbContext>());
         services.AddScoped(typeof(IRepository<>), typeof(Repository<>));
+
+        services.AddScoped<IEstabelecimentoRepository, EstabelecimentoRepository>();
+        services.AddScoped<IFuncionarioRepository, FuncionarioRepository>();
+        services.AddScoped<IServicoRepository, ServicoRepository>();
+        services.AddScoped<IClienteRepository, ClienteRepository>();
         services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
         services.AddScoped<IConversaRepository, ConversaRepository>();
 

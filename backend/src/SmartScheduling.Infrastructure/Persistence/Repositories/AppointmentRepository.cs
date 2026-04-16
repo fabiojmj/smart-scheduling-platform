@@ -44,4 +44,11 @@ public class AgendamentoRepository(AppDbContext context) : Repository<Agendament
                      && a.Horario.Start <= ate)
             .ToListAsync(cancellationToken);
     }
+
+    public async Task<Agendamento?> ObterComDetalhesAsync(Guid id, CancellationToken cancellationToken = default) =>
+        await Context.Agendamentos
+            .Include(a => a.Cliente)
+            .Include(a => a.Funcionario)
+            .Include(a => a.Servico)
+            .FirstOrDefaultAsync(a => a.Id == id, cancellationToken);
 }

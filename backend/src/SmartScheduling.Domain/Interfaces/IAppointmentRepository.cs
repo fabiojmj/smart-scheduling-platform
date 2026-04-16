@@ -8,4 +8,5 @@ public interface IAgendamentoRepository : IRepository<Agendamento>
     Task<IReadOnlyList<Agendamento>> ObterPorClienteAsync(Guid clienteId, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<Agendamento>> ObterPorEstabelecimentoAsync(Guid estabelecimentoId, DateOnly data, CancellationToken cancellationToken = default);
     Task<IReadOnlyList<Agendamento>> ObterProximosAsync(TimeSpan dentro, CancellationToken cancellationToken = default);
+    Task<Agendamento?> ObterComDetalhesAsync(Guid id, CancellationToken cancellationToken = default);
 }
