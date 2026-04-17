@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using SmartScheduling.Domain.Interfaces;
 using SmartScheduling.Infrastructure.Persistence;
 using SmartScheduling.Infrastructure.Persistence.Repositories;
+using SmartScheduling.Infrastructure.Services;
 
 namespace SmartScheduling.Infrastructure;
 
@@ -24,6 +25,8 @@ public static class DependencyInjection
         services.AddScoped<IClienteRepository, ClienteRepository>();
         services.AddScoped<IAgendamentoRepository, AgendamentoRepository>();
         services.AddScoped<IConversaRepository, ConversaRepository>();
+        services.AddScoped<IUsuarioRepository, UsuarioRepository>();
+        services.AddScoped<ITokenService, TokenService>();
 
         return services;
     }

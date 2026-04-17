@@ -13,6 +13,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Agendamento> Agendamentos => Set<Agendamento>();
     public DbSet<Conversa> Conversas => Set<Conversa>();
     public DbSet<Mensagem> Mensagens => Set<Mensagem>();
+    public DbSet<Usuario> Usuarios => Set<Usuario>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

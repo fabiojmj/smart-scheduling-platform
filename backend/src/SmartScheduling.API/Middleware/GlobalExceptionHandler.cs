@@ -12,6 +12,7 @@ public class GlobalExceptionHandler(ILogger<GlobalExceptionHandler> logger) : IE
         logger.LogError(exception, "Excecao: {Message}", exception.Message);
         var pd = exception switch
         {
+            UnauthorizedException  => new ProblemDetails { Status = 401, Title = "Nao autorizado",    Detail = exception.Message },
             DomainException        => new ProblemDetails { Status = 422, Title = "Erro de dominio",    Detail = exception.Message },
             ValidationException ve => new ProblemDetails { Status = 400, Title = "Erro de validacao",  Detail = string.Join("; ", ve.Errors.Select(e => e.ErrorMessage)) },
             _                      => new ProblemDetails { Status = 500, Title = "Erro interno",       Detail = "Ocorreu um erro inesperado." }
