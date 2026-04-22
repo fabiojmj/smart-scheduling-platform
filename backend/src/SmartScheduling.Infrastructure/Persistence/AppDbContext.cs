@@ -14,6 +14,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Conversa> Conversas => Set<Conversa>();
     public DbSet<Mensagem> Mensagens => Set<Mensagem>();
     public DbSet<Usuario> Usuarios => Set<Usuario>();
+    public DbSet<EstablishmentWorkingHours> HorariosEstabelecimento => Set<EstablishmentWorkingHours>();
+    public DbSet<EstablishmentBlock> BloqueiosEstabelecimento => Set<EstablishmentBlock>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

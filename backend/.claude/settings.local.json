@@ -2,7 +2,13 @@
   "permissions": {
     "allow": [
       "Bash(dotnet test *)",
-      "Bash(find *)"
+      "Bash(find *)",
+      "Bash(xargs grep *)",
+      "Bash(dotnet build *)",
+      "Bash(dotnet ef migrations *)",
+      "Bash(dotnet tool *)",
+      "Bash(dotnet add *)",
+      "Bash(dotnet ef database *)"
     ]
   }
 }
