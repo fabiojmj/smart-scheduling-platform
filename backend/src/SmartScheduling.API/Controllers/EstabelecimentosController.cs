@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -20,6 +21,19 @@ public class EstabelecimentosController(IMediator mediator) : ControllerBase
     {
         var id = await mediator.Send(command, ct);
         return CreatedAtAction(nameof(ObterPorId), new { id }, id);
+    }
+
+    /// <summary>GET /api/estabelecimentos/meu — Retorna o estabelecimento do usuário logado</summary>
+    [HttpGet("meu")]
+    [ProducesResponseType(typeof(EstabelecimentoDto), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ObterMeu(CancellationToken ct)
+    {
+        var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        if (string.IsNullOrEmpty(userId)) return Unauthorized();
+        var result = await mediator.Send(new ObterMeuEstabelecimentoQuery(userId), ct);
+        if (result is null) return NotFound();
+        return Ok(result);
     }
 
     /// <summary>GET /api/estabelecimentos/{id} — Retorna um estabelecimento pelo ID</summary>
