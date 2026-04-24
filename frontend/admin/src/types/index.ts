@@ -20,7 +20,7 @@ export interface Estabelecimento {
 }
 
 export interface Horario {
-  diaSemana: string
+  diaSemana: number | string
   horaInicio: string
   horaFim: string
 }
