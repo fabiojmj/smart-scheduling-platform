@@ -20,8 +20,8 @@ public class RecurringSchedule : Entity
     public int?                MaxOccurrences { get; private set; }
     public bool                IsActive     { get; private set; }
 
-    private readonly List<Appointment> _appointments = [];
-    public IReadOnlyCollection<Appointment> Appointments => _appointments.AsReadOnly();
+    private readonly List<Agendamento> _appointments = [];
+    public IReadOnlyCollection<Agendamento> Appointments => _appointments.AsReadOnly();
 
     private RecurringSchedule() { DaysOfWeek = []; }
 

@@ -3,20 +3,17 @@ using SmartScheduling.Domain.Entities;
 using SmartScheduling.Domain.Enums;
 using SmartScheduling.Domain.Exceptions;
 using SmartScheduling.Domain.Interfaces;
-using SmartScheduling.Domain.Services;
 using SmartScheduling.Domain.ValueObjects;
 
 namespace SmartScheduling.Application.Recurring.Commands.CreateRecurringSchedule;
 
 public sealed class CreateRecurringScheduleHandler(
     IRecurringScheduleRepository    recurringRepo,
-    IAppointmentRepository          appointmentRepo,
-    IRepository<Client>             clientRepo,
-    IRepository<Employee>           employeeRepo,
-    IRepository<Service>            serviceRepo,
-    IEstablishmentWorkingHoursRepository workingHoursRepo,
-    IEstablishmentBlockRepository   blockRepo,
-    EstablishmentAvailabilityService availabilityService,
+    IAgendamentoRepository          appointmentRepo,
+    IRepository<Cliente>            clientRepo,
+    IRepository<Funcionario>        employeeRepo,
+    IRepository<Servico>            serviceRepo,
+    IEstablishmentAvailabilityService availabilityService,
     IUnitOfWork                     unitOfWork)
     : IRequestHandler<CreateRecurringScheduleCommand, Guid>
 {
@@ -26,12 +23,12 @@ public sealed class CreateRecurringScheduleHandler(
         CreateRecurringScheduleCommand request,
         CancellationToken cancellationToken)
     {
-        var client   = await clientRepo.GetByIdAsync(request.ClientId, cancellationToken)
-                       ?? throw new DomainException("Cliente nao encontrado.");
-        var employee = await employeeRepo.GetByIdAsync(request.EmployeeId, cancellationToken)
-                       ?? throw new DomainException("Funcionario nao encontrado.");
-        var service  = await serviceRepo.GetByIdAsync(request.ServiceId, cancellationToken)
-                       ?? throw new DomainException("Servico nao encontrado.");
+        var cliente    = await clientRepo.GetByIdAsync(request.ClientId, cancellationToken)
+                         ?? throw new DomainException("Cliente nao encontrado.");
+        var funcionario = await employeeRepo.GetByIdAsync(request.EmployeeId, cancellationToken)
+                         ?? throw new DomainException("Funcionario nao encontrado.");
+        var servico    = await serviceRepo.GetByIdAsync(request.ServiceId, cancellationToken)
+                         ?? throw new DomainException("Servico nao encontrado.");
 
         var schedule = request.Frequency switch
         {
@@ -58,29 +55,21 @@ public sealed class CreateRecurringScheduleHandler(
         var until       = request.StartsOn.AddMonths(3);
         var occurrences = schedule.GenerateOccurrences(request.StartsOn, until, MaxUpfrontOccurrences);
 
-        var workingHours = await workingHoursRepo.GetByEstablishmentAsync(
-            request.EstablishmentId, cancellationToken);
-
         foreach (var date in occurrences)
         {
             var startDateTime = date.ToDateTime(request.StartTime);
-            var blocks        = await blockRepo.GetActiveBlocksAsync(
-                request.EstablishmentId, date, cancellationToken);
 
-            try
-            {
-                availabilityService.EnsureOpen(workingHours, blocks, startDateTime);
-            }
-            catch (DomainException)
-            {
+            var disponivel = await availabilityService.EstaDisponivelAsync(
+                request.EstablishmentId, startDateTime, cancellationToken);
+
+            if (!disponivel)
                 continue;
-            }
 
-            var slot        = TimeSlot.Create(startDateTime, service.DurationMinutes);
-            var appointment = Appointment.Schedule(client, employee, service, slot);
-            appointment.Confirm();
+            var slot        = TimeSlot.Create(startDateTime, servico.DuracaoMinutos);
+            var agendamento = Agendamento.Agendar(cliente, funcionario, servico, slot);
+            agendamento.Confirmar();
 
-            await appointmentRepo.AddAsync(appointment, cancellationToken);
+            await appointmentRepo.AddAsync(agendamento, cancellationToken);
         }
 
         await unitOfWork.CommitAsync(cancellationToken);

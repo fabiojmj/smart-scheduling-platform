@@ -21,10 +21,10 @@ public class RecurringScheduleConfiguration : IEntityTypeConfiguration<Recurring
         builder.Property(r => r.DaysOfWeek)
             .HasConversion(
                 v => string.Join(',', v.Select(d => (int)d)),
-                v => v == "" ? [] : v.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                                     .Select(int.Parse)
-                                     .Select(i => (DayOfWeek)i)
-                                     .ToArray())
+                v => v == "" ? Array.Empty<DayOfWeek>() : v.Split(',', StringSplitOptions.RemoveEmptyEntries)
+                                                            .Select(int.Parse)
+                                                            .Select(i => (DayOfWeek)i)
+                                                            .ToArray())
             .HasColumnType("varchar(20)");
 
         builder.Property(r => r.StartTime)
@@ -44,17 +44,17 @@ public class RecurringScheduleConfiguration : IEntityTypeConfiguration<Recurring
         builder.HasIndex(r => new { r.EstablishmentId, r.IsActive });
         builder.HasIndex(r => r.ClientId);
 
-        builder.HasOne<Client>()
+        builder.HasOne<Cliente>()
             .WithMany()
             .HasForeignKey(r => r.ClientId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne<Employee>()
+        builder.HasOne<Funcionario>()
             .WithMany()
             .HasForeignKey(r => r.EmployeeId)
             .OnDelete(DeleteBehavior.Restrict);
 
-        builder.HasOne<Service>()
+        builder.HasOne<Servico>()
             .WithMany()
             .HasForeignKey(r => r.ServiceId)
             .OnDelete(DeleteBehavior.Restrict);

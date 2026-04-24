@@ -6,7 +6,7 @@ namespace SmartScheduling.Application.Recurring.Commands.CancelRecurringSchedule
 
 public sealed class CancelRecurringScheduleHandler(
     IRecurringScheduleRepository recurringRepo,
-    IAppointmentRepository       appointmentRepo,
+    IAgendamentoRepository appointmentRepo,
     IUnitOfWork                  unitOfWork)
     : IRequestHandler<CancelRecurringScheduleCommand>
 {
@@ -20,13 +20,13 @@ public sealed class CancelRecurringScheduleHandler(
         schedule.Cancel();
         recurringRepo.Update(schedule);
 
-        var futureAppointments = await appointmentRepo.GetByClientAsync(
+        var futureAppointments = await appointmentRepo.ObterPorClienteAsync(
             schedule.ClientId, cancellationToken);
 
         foreach (var appt in futureAppointments.Where(a =>
-            a.IsActive() && a.TimeSlot.Start > DateTime.UtcNow))
+            a.EstaAtivo() && a.Horario.Start > DateTime.UtcNow))
         {
-            appt.Cancel("Recorrencia cancelada pelo proprietario.");
+            appt.Cancelar("Recorrencia cancelada pelo proprietario.");
             appointmentRepo.Update(appt);
         }
 

@@ -5,10 +5,10 @@ using SmartScheduling.Domain.Interfaces;
 namespace SmartScheduling.Application.Recurring.Queries.GetRecurringSchedules;
 
 public sealed class GetRecurringSchedulesHandler(
-    IRecurringScheduleRepository    recurringRepo,
-    IRepository<Domain.Entities.Client>   clientRepo,
-    IRepository<Domain.Entities.Employee> employeeRepo,
-    IRepository<Domain.Entities.Service>  serviceRepo)
+    IRecurringScheduleRepository          recurringRepo,
+    IRepository<Domain.Entities.Cliente>  clientRepo,
+    IRepository<Domain.Entities.Funcionario> employeeRepo,
+    IRepository<Domain.Entities.Servico>  serviceRepo)
     : IRequestHandler<GetRecurringSchedulesQuery, IReadOnlyList<RecurringScheduleDto>>
 {
     public async Task<IReadOnlyList<RecurringScheduleDto>> Handle(
@@ -22,15 +22,15 @@ public sealed class GetRecurringSchedulesHandler(
 
         foreach (var s in schedules)
         {
-            var client   = await clientRepo.GetByIdAsync(s.ClientId, cancellationToken);
-            var employee = await employeeRepo.GetByIdAsync(s.EmployeeId, cancellationToken);
-            var service  = await serviceRepo.GetByIdAsync(s.ServiceId, cancellationToken);
+            var cliente    = await clientRepo.GetByIdAsync(s.ClientId, cancellationToken);
+            var funcionario = await employeeRepo.GetByIdAsync(s.EmployeeId, cancellationToken);
+            var servico    = await serviceRepo.GetByIdAsync(s.ServiceId, cancellationToken);
 
             result.Add(new RecurringScheduleDto(
                 s.Id,
-                client?.Name   ?? "-",
-                employee?.Name ?? "-",
-                service?.Name  ?? "-",
+                cliente?.Nome    ?? "-",
+                funcionario?.Nome ?? "-",
+                servico?.Nome    ?? "-",
                 s.Frequency,
                 s.Interval,
                 s.DaysOfWeek,

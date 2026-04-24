@@ -4,7 +4,8 @@
       "Bash(dotnet build *)",
       "Bash(dotnet sln *)",
       "Bash(grep -E \"\\\\.cs$\")",
-      "Bash(npx tsc *)"
+      "Bash(npx tsc *)",
+      "Bash(git mv *)"
     ]
   }
 }

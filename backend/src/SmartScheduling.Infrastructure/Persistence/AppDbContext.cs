@@ -16,6 +16,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<Usuario> Usuarios => Set<Usuario>();
     public DbSet<EstablishmentWorkingHours> HorariosEstabelecimento => Set<EstablishmentWorkingHours>();
     public DbSet<EstablishmentBlock> BloqueiosEstabelecimento => Set<EstablishmentBlock>();
+    public DbSet<RecurringSchedule> RecurringSchedules => Set<RecurringSchedule>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
