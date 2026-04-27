@@ -12,8 +12,8 @@ using SmartScheduling.Infrastructure.Persistence;
 namespace SmartScheduling.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20260422224048_AddEstablishmentWorkingHours")]
-    partial class AddEstablishmentWorkingHours
+    [Migration("20260427154914_FixRecurringScheduleDaysComparer")]
+    partial class FixRecurringScheduleDaysComparer
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -403,6 +403,73 @@ namespace SmartScheduling.Infrastructure.Migrations
                     b.ToTable("mensagens", (string)null);
                 });
 
+            modelBuilder.Entity("SmartScheduling.Domain.Entities.RecurringSchedule", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<int?>("DayOfMonth")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("DaysOfWeek")
+                        .IsRequired()
+                        .HasColumnType("varchar(20)");
+
+                    b.Property<Guid>("EmployeeId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateOnly?>("EndsOn")
+                        .HasColumnType("date");
+
+                    b.Property<Guid>("EstablishmentId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Frequency")
+                        .HasColumnType("integer");
+
+                    b.Property<int>("Interval")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
+
+                    b.Property<bool>("IsActive")
+                        .HasColumnType("boolean");
+
+                    b.Property<int?>("MaxOccurrences")
+                        .HasColumnType("integer");
+
+                    b.Property<Guid>("ServiceId")
+                        .HasColumnType("uuid");
+
+                    b.Property<TimeOnly>("StartTime")
+                        .HasColumnType("time");
+
+                    b.Property<DateOnly>("StartsOn")
+                        .HasColumnType("date");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("EmployeeId");
+
+                    b.HasIndex("ServiceId");
+
+                    b.HasIndex("EstablishmentId", "IsActive");
+
+                    b.ToTable("RecurringSchedules");
+                });
+
             modelBuilder.Entity("SmartScheduling.Domain.Entities.Servico", b =>
                 {
                     b.Property<Guid>("Id")
@@ -680,6 +747,27 @@ namespace SmartScheduling.Infrastructure.Migrations
                         .WithMany("Mensagens")
                         .HasForeignKey("ConversaId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("SmartScheduling.Domain.Entities.RecurringSchedule", b =>
+                {
+                    b.HasOne("SmartScheduling.Domain.Entities.Cliente", null)
+                        .WithMany()
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SmartScheduling.Domain.Entities.Funcionario", null)
+                        .WithMany()
+                        .HasForeignKey("EmployeeId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("SmartScheduling.Domain.Entities.Servico", null)
+                        .WithMany()
+                        .HasForeignKey("ServiceId")
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });
 

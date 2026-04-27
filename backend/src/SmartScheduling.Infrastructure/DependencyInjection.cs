@@ -28,6 +28,7 @@ public static class DependencyInjection
         services.AddScoped<IUsuarioRepository, UsuarioRepository>();
         services.AddScoped<IEstablishmentWorkingHoursRepository, EstablishmentWorkingHoursRepository>();
         services.AddScoped<IEstablishmentBlockRepository, EstablishmentBlockRepository>();
+        services.AddScoped<IRecurringScheduleRepository, RecurringScheduleRepository>();
         services.AddScoped<IEstablishmentAvailabilityService, EstablishmentAvailabilityService>();
         services.AddScoped<ITokenService, TokenService>();
 

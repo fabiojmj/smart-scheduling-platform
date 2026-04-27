@@ -7,7 +7,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace SmartScheduling.Infrastructure.Migrations
 {
     /// <inheritdoc />
-    public partial class AddEstablishmentWorkingHours : Migration
+    public partial class InitialCreate : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -285,6 +285,50 @@ namespace SmartScheduling.Infrastructure.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.CreateTable(
+                name: "RecurringSchedules",
+                columns: table => new
+                {
+                    Id = table.Column<Guid>(type: "uuid", nullable: false),
+                    EstablishmentId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ClientId = table.Column<Guid>(type: "uuid", nullable: false),
+                    EmployeeId = table.Column<Guid>(type: "uuid", nullable: false),
+                    ServiceId = table.Column<Guid>(type: "uuid", nullable: false),
+                    Frequency = table.Column<int>(type: "integer", nullable: false),
+                    Interval = table.Column<int>(type: "integer", nullable: false, defaultValue: 1),
+                    DaysOfWeek = table.Column<string>(type: "varchar(20)", nullable: false),
+                    DayOfMonth = table.Column<int>(type: "integer", nullable: true),
+                    StartTime = table.Column<TimeOnly>(type: "time", nullable: false),
+                    StartsOn = table.Column<DateOnly>(type: "date", nullable: false),
+                    EndsOn = table.Column<DateOnly>(type: "date", nullable: true),
+                    MaxOccurrences = table.Column<int>(type: "integer", nullable: true),
+                    IsActive = table.Column<bool>(type: "boolean", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: false),
+                    UpdatedAt = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_RecurringSchedules", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_RecurringSchedules_clientes_ClientId",
+                        column: x => x.ClientId,
+                        principalTable: "clientes",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RecurringSchedules_funcionarios_EmployeeId",
+                        column: x => x.EmployeeId,
+                        principalTable: "funcionarios",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_RecurringSchedules_servicos_ServiceId",
+                        column: x => x.ServiceId,
+                        principalTable: "servicos",
+                        principalColumn: "id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "ix_agendamentos_cliente_id",
                 table: "agendamentos",
@@ -373,6 +417,26 @@ namespace SmartScheduling.Infrastructure.Migrations
                 column: "conversa_id");
 
             migrationBuilder.CreateIndex(
+                name: "IX_RecurringSchedules_ClientId",
+                table: "RecurringSchedules",
+                column: "ClientId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecurringSchedules_EmployeeId",
+                table: "RecurringSchedules",
+                column: "EmployeeId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecurringSchedules_EstablishmentId_IsActive",
+                table: "RecurringSchedules",
+                columns: new[] { "EstablishmentId", "IsActive" });
+
+            migrationBuilder.CreateIndex(
+                name: "IX_RecurringSchedules_ServiceId",
+                table: "RecurringSchedules",
+                column: "ServiceId");
+
+            migrationBuilder.CreateIndex(
                 name: "ix_servicos_estabelecimento_id",
                 table: "servicos",
                 column: "estabelecimento_id");
@@ -406,19 +470,22 @@ namespace SmartScheduling.Infrastructure.Migrations
                 name: "mensagens");
 
             migrationBuilder.DropTable(
+                name: "RecurringSchedules");
+
+            migrationBuilder.DropTable(
                 name: "Usuarios");
+
+            migrationBuilder.DropTable(
+                name: "conversas");
 
             migrationBuilder.DropTable(
                 name: "clientes");
 
             migrationBuilder.DropTable(
-                name: "servicos");
-
-            migrationBuilder.DropTable(
                 name: "funcionarios");
 
             migrationBuilder.DropTable(
-                name: "conversas");
+                name: "servicos");
 
             migrationBuilder.DropTable(
                 name: "estabelecimentos");

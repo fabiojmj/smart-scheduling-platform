@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using SmartScheduling.Domain.Entities;
 
@@ -18,14 +19,20 @@ public class RecurringScheduleConfiguration : IEntityTypeConfiguration<Recurring
             .IsRequired()
             .HasDefaultValue(1);
 
+        var daysComparer = new ValueComparer<DayOfWeek[]>(
+            (a, b) => a != null && b != null && a.SequenceEqual(b),
+            v => v.Aggregate(0, (a, d) => HashCode.Combine(a, d.GetHashCode())),
+            v => v.ToArray());
+
         builder.Property(r => r.DaysOfWeek)
             .HasConversion(
                 v => string.Join(',', v.Select(d => (int)d)),
                 v => v == "" ? Array.Empty<DayOfWeek>() : v.Split(',', StringSplitOptions.RemoveEmptyEntries)
-                                                            .Select(int.Parse)
-                                                            .Select(i => (DayOfWeek)i)
-                                                            .ToArray())
-            .HasColumnType("varchar(20)");
+                                     .Select(int.Parse)
+                                     .Select(i => (DayOfWeek)i)
+                                     .ToArray())
+            .HasColumnType("varchar(20)")
+            .Metadata.SetValueComparer(daysComparer);
 
         builder.Property(r => r.StartTime)
             .HasColumnType("time")
