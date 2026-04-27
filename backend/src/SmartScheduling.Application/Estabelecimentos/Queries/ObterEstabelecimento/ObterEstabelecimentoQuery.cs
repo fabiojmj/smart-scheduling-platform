@@ -7,7 +7,8 @@ public record EstabelecimentoDto(
     string Nome,
     string WhatsAppPhoneNumberId,
     bool Ativo,
-    DateTime CriadoEm
+    DateTime CriadoEm,
+    Guid? FuncionarioIdPrimeiroAtendimento
 );
 
 public record ObterEstabelecimentoQuery(Guid Id) : IRequest<EstabelecimentoDto>;

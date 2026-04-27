@@ -8,6 +8,7 @@ public class Estabelecimento : Entity
     public string WhatsAppPhoneNumberId { get; private set; }
     public string ProprietarioId { get; private set; }
     public bool Ativo { get; private set; }
+    public Guid? FuncionarioIdPrimeiroAtendimento { get; private set; }
 
     private readonly List<Funcionario> _funcionarios = [];
     private readonly List<Servico> _servicos = [];
@@ -21,6 +22,12 @@ public class Estabelecimento : Entity
         if (string.IsNullOrWhiteSpace(nome))
             throw new DomainException("Nome do estabelecimento e obrigatorio.");
         return new Estabelecimento { Nome = nome.Trim(), WhatsAppPhoneNumberId = whatsAppPhoneNumberId, ProprietarioId = proprietarioId, Ativo = true };
+    }
+
+    public void DefinirFuncionarioPrimeiroAtendimento(Guid? funcionarioId)
+    {
+        FuncionarioIdPrimeiroAtendimento = funcionarioId;
+        MarkAsUpdated();
     }
 
     public void AtualizarNome(string nome)

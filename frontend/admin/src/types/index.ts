@@ -17,6 +17,7 @@ export interface Estabelecimento {
   whatsAppPhoneNumberId: string
   ativo: boolean
   criadoEm: string
+  funcionarioIdPrimeiroAtendimento: string | null
 }
 
 export interface Horario {

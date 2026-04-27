@@ -12,6 +12,6 @@ public sealed class ObterMeuEstabelecimentoHandler(IEstabelecimentoRepository re
     {
         var e = await repo.ObterPorProprietarioAsync(request.ProprietarioId, cancellationToken);
         if (e is null) return null;
-        return new EstabelecimentoDto(e.Id, e.Nome, e.WhatsAppPhoneNumberId, e.Ativo, e.CreatedAt);
+        return new EstabelecimentoDto(e.Id, e.Nome, e.WhatsAppPhoneNumberId, e.Ativo, e.CreatedAt, e.FuncionarioIdPrimeiroAtendimento);
     }
 }

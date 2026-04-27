@@ -11,6 +11,6 @@ public sealed class ObterEstabelecimentoHandler(IEstabelecimentoRepository repo)
     {
         var e = await repo.GetByIdAsync(request.Id, cancellationToken)
             ?? throw new DomainException("Estabelecimento nao encontrado.");
-        return new EstabelecimentoDto(e.Id, e.Nome, e.WhatsAppPhoneNumberId, e.Ativo, e.CreatedAt);
+        return new EstabelecimentoDto(e.Id, e.Nome, e.WhatsAppPhoneNumberId, e.Ativo, e.CreatedAt, e.FuncionarioIdPrimeiroAtendimento);
     }
 }

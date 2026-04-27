@@ -55,13 +55,16 @@ export const authApi = {
 
 export const estabelecimentosApi = {
   meu: () =>
-    api.get<{ id: string; nome: string; whatsAppPhoneNumberId: string; ativo: boolean; criadoEm: string }>('/estabelecimentos/meu'),
+    api.get<{ id: string; nome: string; whatsAppPhoneNumberId: string; ativo: boolean; criadoEm: string; funcionarioIdPrimeiroAtendimento: string | null }>('/estabelecimentos/meu'),
 
   criar: (nome: string, whatsAppPhoneNumberId: string, proprietarioId: string) =>
     api.post<string>('/estabelecimentos', { nome, whatsAppPhoneNumberId, proprietarioId }),
 
   atualizarNome: (id: string, nome: string) =>
     api.patch(`/estabelecimentos/${id}`, { nome }),
+
+  definirPrimeiroAtendimento: (id: string, funcionarioId: string | null) =>
+    api.patch(`/estabelecimentos/${id}/primeiro-atendimento`, { funcionarioId }),
 }
 
 // ─── Funcionários ────────────────────────────────────────────────────────────

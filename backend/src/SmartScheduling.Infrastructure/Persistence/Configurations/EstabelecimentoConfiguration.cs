@@ -29,6 +29,15 @@ public class EstabelecimentoConfiguration : IEntityTypeConfiguration<Estabelecim
             .IsRequired();
 
         builder.Property(e => e.Ativo).HasColumnName("ativo").IsRequired();
+
+        builder.Property(e => e.FuncionarioIdPrimeiroAtendimento)
+            .HasColumnName("funcionario_primeiro_atendimento_id");
+
+        builder.HasOne<Funcionario>()
+            .WithMany()
+            .HasForeignKey(e => e.FuncionarioIdPrimeiroAtendimento)
+            .OnDelete(DeleteBehavior.SetNull)
+            .IsRequired(false);
         builder.Property(e => e.CreatedAt).HasColumnName("criado_em").IsRequired();
         builder.Property(e => e.UpdatedAt).HasColumnName("atualizado_em");
 

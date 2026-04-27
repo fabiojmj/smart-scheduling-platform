@@ -4,7 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using SmartScheduling.Application.Estabelecimentos.Commands.AtualizarEstabelecimento;
 using SmartScheduling.Application.Estabelecimentos.Commands.CriarEstabelecimento;
+using SmartScheduling.Application.Estabelecimentos.Commands.PrimeiroAtendimento;
 using SmartScheduling.Application.Estabelecimentos.Queries.ObterEstabelecimento;
+using SmartScheduling.Application.Estabelecimentos.Queries.PrimeiroAtendimento;
 
 namespace SmartScheduling.API.Controllers;
 
@@ -63,6 +65,36 @@ public class EstabelecimentosController(IMediator mediator) : ControllerBase
         await mediator.Send(new DesativarEstabelecimentoCommand(id), ct);
         return NoContent();
     }
+
+    /// <summary>PATCH /api/estabelecimentos/{id}/primeiro-atendimento — Define o funcionário responsável pelo primeiro atendimento</summary>
+    [HttpPatch("{id:guid}/primeiro-atendimento")]
+    [ProducesResponseType(StatusCodes.Status204NoContent)]
+    [ProducesResponseType(StatusCodes.Status400BadRequest)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> DefinirPrimeiroAtendimento(
+        Guid id,
+        [FromBody] DefinirPrimeiroAtendimentoRequest request,
+        CancellationToken ct)
+    {
+        await mediator.Send(new DefinirFuncionarioPrimeiroAtendimentoCommand(id, request.FuncionarioId), ct);
+        return NoContent();
+    }
+
+    /// <summary>GET /api/estabelecimentos/{id}/primeiro-atendimento/disponibilidade — Slots disponíveis do funcionário de primeiro atendimento</summary>
+    [HttpGet("{id:guid}/primeiro-atendimento/disponibilidade")]
+    [ProducesResponseType(typeof(ObterDisponibilidadePrimeiroAtendimentoResult), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status404NotFound)]
+    public async Task<IActionResult> ObterDisponibilidadePrimeiroAtendimento(
+        Guid id,
+        [FromQuery] Guid servicoId,
+        [FromQuery] DateOnly data,
+        CancellationToken ct)
+    {
+        var result = await mediator.Send(
+            new ObterDisponibilidadePrimeiroAtendimentoQuery(id, servicoId, data), ct);
+        return Ok(result);
+    }
 }
 
 public record AtualizarNomeEstabelecimentoRequest(string Nome);
+public record DefinirPrimeiroAtendimentoRequest(Guid? FuncionarioId);
